@@ -1,0 +1,36 @@
+# === Python build files ===
+__pycache__/
+*.py[cod]
+*$py.class
+
+# === Virtual environment ===
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# === Dependency / package files ===
+*.egg-info/
+*.egg
+dist/
+build/
+
+# === IDE / editor settings ===
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# === Logs / cache ===
+*.log
+*.out
+*.err
+.cache/
+pytest_cache/
+
+# === Jupyter notebooks ===
+.ipynb_checkpoints/
+
+# === Misc ===
+*.sqlite3
