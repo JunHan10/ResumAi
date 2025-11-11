@@ -1,0 +1,24 @@
+# --- Core AI & LLM tools ---
+ollama                # Local LLM interface (Ollama Python API)
+langchain             # Framework for prompt and chain management
+langgraph             # For graph-based agent orchestration
+python-dotenv         # For loading environment variables (.env)
+
+# --- Document parsing ---
+pdfplumber            # Reliable PDF text extraction
+python-docx           # For reading .docx resumes
+pypdf2                # Optional alternative PDF reader
+
+# --- Vector embeddings & RAG (optional but useful later) ---
+faiss-cpu             # Lightweight vector store
+sentence-transformers # Embeddings for RAG or similarity search
+langchain-community   # LangChain integrations (needed for vectorstores)
+
+# --- Frontend (optional, for local UI) ---
+streamlit             # Easy interactive interface
+gradio                # Alternative simple UI
+
+# --- Utilities ---
+tqdm                  # Progress bars
+requests              # For any HTTP calls (if needed)
+numpy                 # Required by faiss/sentence-transformers
