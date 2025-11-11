@@ -9,6 +9,7 @@ venv/
 .venv/
 env/
 ENV/
+.env
 
 # === Dependency / package files ===
 *.egg-info/
