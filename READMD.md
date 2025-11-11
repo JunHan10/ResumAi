@@ -1,0 +1,1 @@
+This is the final project of Artificial Intelligence. The ResumAi agent will be able to critique one's resume, give suggestions, proper feedback, recommendations on what the person can improve on after reviewing. Idealy, the agent shall give certification suggestions, as well as the best next-step that the person should take to further strengthen their resume.
