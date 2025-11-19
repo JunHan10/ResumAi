@@ -1,0 +1,47 @@
+Job Title	Software Developer
+Description	Writes and tests code for applications and systems. Works with teams to solve bugs and add features.
+Typical Day	Begins with a daily stand-up to assign tasks. Spends the majority of the day writing and testing code. Debugs issues and collaborates with peers via code reviews. Ends the day pushing updates or writing documentation.
+Technical Skills	Programming languages (e.g., Python, Java), version control
+Non Technical Skills	Problem-solving, collaboration, persistence
+--------------------	 
+Job Title	Frontend Developer
+Description	Builds user interfaces for web or mobile applications. Uses HTML, CSS, and JavaScript frameworks.
+Typical Day	Starts with reviewing design specs and fixing minor UI issues. Implements interface features using HTML, CSS, and JavaScript. Tests user interactions and ensures responsiveness. Collaborates with designers and backend devs.
+Technical Skills	HTML/CSS/JavaScript, responsive design, frameworks
+Non Technical Skills	UX focus, creativity, communication
+--------------------	 
+Job Title	Backend Developer
+Description	Develops server-side logic and databases. Ensures data integrity and system efficiency.
+Typical Day	Begins by reviewing logs or database performance. Implements new APIs or server logic. Tests and optimizes queries. Collaborates with frontend or DevOps teams.
+Technical Skills	APIs, databases, server logic, security protocols
+Non Technical Skills	Logical thinking, teamwork, organization
+--------------------	 
+Job Title	Full Stack Developer
+Description	Works on both frontend and backend of web applications. Builds complete software solutions.
+Typical Day	Attends a scrum meeting and splits time between frontend and backend tasks. Fixes bugs, builds features, and ensures systems work end-to-end. Coordinates with designers and product managers. Deploys code and monitors systems.
+Technical Skills	Frontend/backend languages, version control, deployment
+Non Technical Skills	Versatility, project coordination, teamwork
+--------------------	 
+Job Title	QA Engineer
+Description	Tests software for bugs and performance issues. Writes test cases and works closely with developers.
+Typical Day	Begins testing new software builds or reviewing bug reports. Writes and executes test cases. Reports issues and verifies fixes. Helps improve automated testing frameworks.
+Technical Skills	Test planning, scripting, defect tracking tools
+Non Technical Skills	Critical thinking, communication, patience
+--------------------	 
+Job Title	Data Analyst
+Description	Collects, processes, and interprets data to help companies make decisions. Uses tools like Python, SQL, and Excel.
+Typical Day	Starts by pulling and cleaning data from databases. Analyzes trends and creates dashboards. Prepares reports for stakeholders. Presents insights and suggests improvements.
+Technical Skills	SQL, Excel, BI tools, statistics
+Non Technical Skills	Storytelling with data, attention to detail, curiosity
+--------------------	 
+Job Title	DevOps Engineer
+Description	Supports deployment pipelines and automation. Maintains cloud infrastructure and monitoring systems.
+Typical Day	Monitors CI/CD pipelines and system alerts. Automates deployment processes and configures cloud environments. Troubleshoots build or server issues. Updates documentation and scripts.
+Technical Skills	CI/CD tools, cloud platforms, automation scripting
+Non Technical Skills	Problem-solving, teamwork, reliability
+--------------------	 
+Job Title	IT Support Specialist
+Description	Provides technical assistance to users. Troubleshoots software and hardware problems.
+Typical Day	Checks support tickets and prioritizes urgent issues. Troubleshoots hardware and software problems. Assists with installations and onboarding. Documents solutions for future use.
+Technical Skills	Troubleshooting, operating systems, networking basics
+Non Technical Skills	Patience, customer service, multitasking

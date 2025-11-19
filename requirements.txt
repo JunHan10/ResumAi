@@ -1,0 +1,11 @@
+ollama
+
+faiss-cpu
+langchain-community
+
+numpy
+pdfplumber
+python-docx
+
+beautifulsoup4
+tqdm

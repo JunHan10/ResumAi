@@ -1,0 +1,64 @@
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments (local venvs)
+.venv/
+venv/
+env/
+ENV/
+uv/               # if you have a venv named 'uv' include it here
+
+# Project-specific lockfiles (optional)
+# Remove from ignore if you want to commit them
+uv.lock
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Editor / IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs & test output
+*.log
+.pytest_cache/
+coverage.xml
+htmlcov/
+.coverage
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model / cache / large downloads
+.cache/
+huggingface/
+models/
+
+# Generated vector DB / embeddings
+vectorstore/
+*.faiss
+*.npy
+
+# Data and sensitive files
+# Keep small, safe files in `data/` but ignore private data/resumes
+data/resumes/
+# If you want to keep a single job description file, un-ignore it explicitly:
+!data/job_description.txt
+
+# Secrets and environment files
+.env
+.env.*
+credentials.json
+*.pem
+*.key
