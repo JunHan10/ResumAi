@@ -102,14 +102,6 @@ def interactive_query(vectorstore, model="llama3.2"):
         print("-" * 60)
         print()
 
-# Currently commented out because I don't know if the save should be permanent
-# I also don't know if a file uploaded during the runtime of query.py can be dynamically added to the vectorstore without re-running ingest.py
-#def save_uploaded_file(uploaded_file):
-    # Save the uploaded PDF file
-#    save_path = os.path.join("data\resumes", uploaded_file.name)
-#    with open(save_path, "wb") as f:
-#        f.write(uploaded_file.getbuffer())
-
 # --- Start of Streamlit UI ---
 st.set_page_config(page_title="Resume Editor", page_icon=":briefcase:", layout="wide")
 
@@ -117,10 +109,6 @@ st.title("Resume Editor (Powered by llama3.2)")
 
 uploaded_file = st.file_uploader("Upload your resume (PDF or TXT)", type=["pdf", "txt"])
 question = st.text_input("Your Question", "How can I improve my resume for a software engineering position?")
-# When functional, this will call the save_uploaded_file function to store the uploaded resume and then append the resume's name to the question to make sure that the LLM knows to reference it.
-#if uploaded_file:
-#
-#    question += f" Based on my resume: {uploaded_file.name}"
 
 analyze = st.button("Critque Resume")
 
