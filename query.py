@@ -2,6 +2,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.embeddings import Embeddings
 from ollama import Client
 import streamlit as st
+import pdfplumber
 import os
 import io
 
@@ -49,13 +50,16 @@ def search(vectorstore, query, k=5):
     return chunks
 
 # Build prompt + call Ollama
-def query_llm(context, question, model="llama3.2"):
+def query_llm(context, question, file_content, model="llama3.2"):
     """Query the LLM with context from the vectorstore"""
     client = Client()
 
     prompt = f"""You are a resume analysis assistant.
 
-Context from resume and job description:
+Resume Content:
+{file_content}
+
+Context of job descriptions:
 {context}
 
 Question:
@@ -116,9 +120,21 @@ question = st.text_input("Your Question", "How can I improve my resume for a sof
 # When functional, this will call the save_uploaded_file function to store the uploaded resume and then append the resume's name to the question to make sure that the LLM knows to reference it.
 #if uploaded_file:
 #
-#    question += f" based on my resume: {uploaded_file.name}"
+#    question += f" Based on my resume: {uploaded_file.name}"
 
 analyze = st.button("Critque Resume")
+
+def extract_text_from_pdf(pdf_file):
+    pdf_reader = pdfplumber.open(pdf_file)
+    text = ""
+    for page in pdf_reader.pages:
+        text += page.extract_text(layout=True) + "\n"
+    return text
+
+def extract_text(uploaded_file):
+    if uploaded_file.type == "application/pdf":
+        return extract_text_from_pdf(io.BytesIO(uploaded_file.read()))
+    return uploaded_file.read().decode("utf-8")
 
 # --- MAIN ---
 if __name__ == "__main__":
@@ -134,28 +150,20 @@ if __name__ == "__main__":
         print("Make sure you've run ingest.py first to create the vectorstore.")
         sys.exit(1)
     
-    if analyze:
-        st.markdown("### 🔍 Searching relevant information...")
-        top_chunks = search(vectorstore, question, k=5)
-        context = "\n\n".join(top_chunks)
-        st.markdown("### 💬 Generating answer...")
-        answer = query_llm(context, question)
-        st.markdown("### Answer:")
-        st.markdown(answer)
-    # Check if user wants interactive mode or single query
-    if len(sys.argv) > 1:
-        # Single query mode
-        question = " ".join(sys.argv[1:])
-        print(f"Question: {question}\n")
-        
-        top_chunks = search(vectorstore, question, k=5)
-        context = "\n\n".join(top_chunks)
-        
-        answer = query_llm(context, question)
-        print("Answer:")
-        print("-" * 60)
-        print(answer)
-        print("-" * 60)
-    else:
-        # Interactive mode
-        interactive_query(vectorstore)
+    if analyze and uploaded_file:
+        st.markdown("### 📄 Analyzing Resume...")
+        try:
+            file_content = extract_text(uploaded_file)
+            if not file_content.strip():
+                st.error("The uploaded resume is empty.")
+                st.stop()
+            st.markdown("### 🔍 Searching relevant information...")
+            top_chunks = search(vectorstore, question, k=5)
+            context = "\n\n".join(top_chunks)
+            st.markdown("### 💬 Generating answer...")
+            answer = query_llm(context, question, file_content)
+            st.markdown("### Answer:")
+            st.markdown(answer)
+        except Exception as e:
+            st.error(f"Error analyzing resume: {e}")
+            st.stop()
