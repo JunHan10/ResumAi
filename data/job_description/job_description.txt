@@ -39,9 +39,93 @@ Description	Supports deployment pipelines and automation. Maintains cloud infras
 Typical Day	Monitors CI/CD pipelines and system alerts. Automates deployment processes and configures cloud environments. Troubleshoots build or server issues. Updates documentation and scripts.
 Technical Skills	CI/CD tools, cloud platforms, automation scripting
 Non Technical Skills	Problem-solving, teamwork, reliability
---------------------	 
+-------------------- 
 Job Title	IT Support Specialist
 Description	Provides technical assistance to users. Troubleshoots software and hardware problems.
 Typical Day	Checks support tickets and prioritizes urgent issues. Troubleshoots hardware and software problems. Assists with installations and onboarding. Documents solutions for future use.
 Technical Skills	Troubleshooting, operating systems, networking basics
 Non Technical Skills	Patience, customer service, multitasking
+--------------------
+Job Title            UI/UX Designer
+Description          Designs user interfaces and experiences for digital products. Creates wireframes, prototypes, and design systems based on user research.
+Typical Day          Starts by reviewing user feedback or design requests. Creates or updates wireframes and prototypes. Conducts usability tests and refines designs. Collaborates with frontend developers and product managers.
+Technical Skills     Design tools (Figma, Sketch), prototyping, user research
+Non Technical Skills Creativity, empathy, communication
+--------------------
+Job Title            Cloud Engineer
+Description          Builds and maintains cloud infrastructure. Ensures systems are scalable, secure, and cost-efficient.
+Typical Day          Checks cloud resource usage and performance logs. Deploys or updates cloud services. Configures automation scripts and security rules. Collaborates with DevOps and engineering teams to optimize workloads.
+Technical Skills     AWS/Azure/GCP, containers, networking
+Non Technical Skills Analytical thinking, documentation, teamwork
+--------------------
+Job Title            Cybersecurity Analyst
+Description          Monitors and protects systems from cyber threats. Investigates incidents and implements security best practices.
+Typical Day          Reviews security dashboards and alerts. Investigates suspicious activity or potential breaches. Applies patches and updates security configurations. Conducts audits and prepares security reports.
+Technical Skills     Security tools, threat analysis, incident response
+Non Technical Skills Attention to detail, problem-solving, vigilance
+--------------------
+Job Title            Product Manager
+Description          Guides product development and ensures alignment between user needs, business goals, and engineering work.
+Typical Day          Holds sprint planning or backlog grooming sessions. Meets with stakeholders to review priorities. Analyzes user feedback and data. Writes product requirements and coordinates with cross-functional teams.
+Technical Skills     Roadmapping tools, analytics, technical knowledge
+Non Technical Skills Leadership, communication, strategic thinking
+--------------------
+Job Title            Database Administrator
+Description          Manages and optimizes databases. Ensures data integrity, availability, and security.
+Typical Day          Monitors database performance and storage usage. Tunes queries or updates schemas. Handles backup and recovery tasks. Works with developers to optimize database interactions.
+Technical Skills     SQL, database design, backup/recovery tools
+Non Technical Skills Organization, precision, problem-solving
+--------------------
+Job Title            Machine Learning Engineer
+Description          Builds, trains, and deploys machine learning models for production systems. Works closely with data teams.
+Typical Day          Cleans and preprocesses data. Experiments with models and evaluates performance. Deploys models and monitors behavior. Collaborates with data scientists and backend developers.
+Technical Skills     Python, ML frameworks, data pipelines
+Non Technical Skills Curiosity, collaboration, analytical thinking
+--------------------
+Job Title            Systems Administrator
+Description          Manages servers, networks, and IT systems. Ensures system uptime and reliability.
+Typical Day          Checks system performance and applies updates. Troubleshoots outages or permission issues. Configures servers and networks. Documents procedures and maintains logs.
+Technical Skills     Operating systems, networking, virtualization
+Non Technical Skills Reliability, time management, communication
+--------------------
+Job Title            Technical Writer
+Description          Creates technical documentation such as manuals, guides, and FAQs. Translates complex information into clear writing.
+Typical Day          Gathers information from engineers or product teams. Writes or edits documentation. Reviews for clarity and accuracy. Publishes updates and organizes content.
+Technical Skills     Documentation tools, research, technical understanding
+Non Technical Skills Clarity, organization, communication
+--------------------
+Job Title Mobile App Developer
+Description Designs and develops applications for mobile platforms such as iOS and Android. Optimizes for performance and user experience.
+Typical Day Reviews feature requests or bug reports. Writes mobile-specific code using Swift, Kotlin, or Flutter. Tests apps on multiple devices. Collaborates with backend developers and designers.
+Technical Skills Swift, Kotlin, Flutter/React Native, mobile APIs
+Non Technical Skills Problem-solving, adaptability, attention to UX
+--------------------
+Job Title AI Research Scientist
+Description Conducts research to advance artificial intelligence and machine learning. Publishes papers and prototypes new algorithms.
+Typical Day Reads latest research papers and benchmarks models. Designs experiments and runs simulations. Analyzes results and writes reports or publications. Collaborates with engineers to apply research in products.
+Technical Skills Python, ML frameworks, mathematics/statistics, research methodology
+Non Technical Skills Curiosity, critical thinking, persistence
+--------------------
+Job Title Game Developer
+Description Creates video games, including coding, design, and testing. Works on gameplay mechanics, graphics, and performance optimization.
+Typical Day Designs game mechanics or levels. Implements gameplay code using engines like Unity or Unreal. Tests for bugs and performance issues. Collaborates with artists, designers, and sound engineers.
+Technical Skills C#/C++, game engines, graphics programming
+Non Technical Skills Creativity, problem-solving, teamwork
+--------------------
+Job Title Network Engineer
+Description Designs, implements, and maintains network infrastructure. Ensures connectivity, security, and performance.
+Typical Day Monitors network performance and security. Configures routers, switches, and firewalls. Troubleshoots connectivity issues. Plans network expansions and upgrades.
+Technical Skills Routing, switching, firewalls, VPN, network monitoring tools
+Non Technical Skills Analytical thinking, communication, problem-solving
+--------------------
+Job Title Digital Marketing Analyst
+Description Uses data analytics to optimize marketing campaigns. Tracks KPIs and provides actionable insights.
+Typical Day Pulls and analyzes marketing data from various platforms. Builds dashboards and reports. Recommends campaign optimizations. Works with marketing and sales teams.
+Technical Skills Google Analytics, Excel, data visualization, marketing platforms
+Non Technical Skills Analytical thinking, communication, attention to detail
+--------------------
+Job Title Robotics Engineer
+Description Designs, builds, and programs robots for automation, research, or consumer use.
+Typical Day Develops mechanical and software components. Programs robots to perform tasks. Tests performance and iterates designs. Works with multidisciplinary teams to integrate robotics solutions.
+Technical Skills Robotics frameworks, programming, sensors/actuators, control systems
+Non Technical Skills Creativity, problem-solving, teamwork
