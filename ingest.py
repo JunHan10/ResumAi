@@ -1,3 +1,7 @@
+# When querying the vector store, we need to ensure that we properly query for either the job descriptions or the schema/example JSON documents.
+# To do this, we add a filter argument to the similarity_search method to specify the source type.
+# For job desctriptions, use vectorstore.similarity_search(question, k=5, filter={"source": "job_description"})
+# For Schema/example JSON documents, use vectorstore.similarity_search(question, k=3, filter={"source": "resume_schema"})
 import os
 import json
 import pdfplumber
@@ -222,6 +226,34 @@ def load_job_descriptions(json_path: str) -> List[LangChainDocument]:
     print(f"✓ Loaded {len(jobs)} jobs → {len(all_chunks)} chunks")
     return all_chunks
 
+def load_example_json_documents(folder: str) -> List[LangChainDocument]:
+    """
+    Load schema/example JSON files as single documents.
+    Each file becomes one retrievable document with metadata tags.
+    """
+    docs = []
+    for filename in os.listdir(folder):
+        if not filename.endswith(".json"):
+            continue
+
+        path = os.path.join(folder, filename)
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        docs.append(
+            LangChainDocument(
+                page_content=content,
+                metadata={
+                    "source": "resume_schema",
+                    "filename": filename,
+                    "doc_type": "schema_or_example"
+                }
+            )
+        )
+
+    print(f"✓ Loaded {len(docs)} schema/example JSON files")
+    return docs
+
 
 def build_faiss_vectorstore(documents: List[LangChainDocument]) -> FAISS:
     """
@@ -273,6 +305,15 @@ if __name__ == "__main__":
     if not documents:
         print("Error: No documents were created. Check your JSON structure.")
         exit(1)
+
+    # Load schema/example JSON documents
+    schema_docs = load_example_json_documents("data/json_examples")
+
+    if not schema_docs:
+        print("Error: No schema/example JSON documents found.")
+        exit(1)
+    
+    documents.extend(schema_docs)
     
     # Build vector store
     vectorstore = build_faiss_vectorstore(documents)

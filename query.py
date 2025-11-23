@@ -50,7 +50,7 @@ def search(vectorstore, query, k=5):
     return chunks
 
 # Build prompt + call Ollama
-def query_llm(context, question, file_content, model="llama3.2"):
+def query_llm(job_description_context, question, file_content, model="llama3.2"):
     """Query the LLM with context from the vectorstore"""
     client = Client()
 
@@ -60,7 +60,7 @@ Resume Content:
 {file_content}
 
 Context of job descriptions:
-{context}
+{job_description_context}
 
 Question:
 {question}
@@ -146,10 +146,10 @@ if __name__ == "__main__":
                 st.error("The uploaded resume is empty.")
                 st.stop()
             st.markdown("### 🔍 Searching relevant information...")
-            top_chunks = search(vectorstore, question, k=5)
-            context = "\n\n".join(top_chunks)
+            job_descriptions = search(vectorstore, question, k=5, filter={"source": "job_description"})
+            job_description_context = "\n\n".join(job_descriptions)
             st.markdown("### 💬 Generating answer...")
-            answer = query_llm(context, question, file_content)
+            answer = query_llm(job_description_context, question, file_content)
             st.markdown("### Answer:")
             st.markdown(answer)
         except Exception as e:
