@@ -42,9 +42,9 @@ def load_vectorstore(path="vectorstore"):
     return vectorstore
 
 # Retrieve top k chunks
-def search(vectorstore, query, k=5):
+def search(vectorstore, query, k=5, filter=None):
     """Search for relevant chunks using similarity search"""
-    results = vectorstore.similarity_search(query, k=k)
+    results = vectorstore.similarity_search(query, k=k, filter=filter)
     # Extract just the text content from Document objects
     chunks = [doc.page_content for doc in results]
     return chunks
@@ -59,13 +59,18 @@ def query_llm(job_descriptions, json_schema, question, file_content, model="llam
 Resume Content:
 {file_content}
 
-Context of job descriptions:
-{job_descriptions}
-
-Question:
+Question to focus your analysis on:
 {question}
 
-Provide a detailed and specific answer based on the context provided."""
+Provide detailed and specific suggestions for changes to this resume. Do not make up any metrics not mentioned in the resume. If you have a suggestion that involves adding a metric, leave it as a variable and explain to replace the variable with an appropriate value in your explanation
+If one the question asked mentions a specific job position, tailor your suggestion to that role using the corresponding job descrition from this list:
+{job_descriptions}
+
+Your response needs to follow this JSON output format exactly:
+{json_schema}
+
+Use the same keys, structure, and ordering as in the example json.
+Do not invent new keys. Do not produce non-JSON text."""
     
     response = client.chat(
         model=model,
