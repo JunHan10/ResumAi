@@ -274,7 +274,7 @@ def build_faiss_vectorstore(documents: List[LangChainDocument]) -> FAISS:
     return vectorstore
 
 
-def save_vectorstore(vectorstore: FAISS, path: str = "vectorstore_jobs"):
+def save_vectorstore(vectorstore: FAISS, path: str = "vectorstore"):
     """Save vector store to disk"""
     os.makedirs(path, exist_ok=True)
     vectorstore.save_local(path)

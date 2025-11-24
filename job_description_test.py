@@ -5,7 +5,11 @@ import streamlit as st
 import pdfplumber
 import os
 import io
-
+import numpy as np
+import faiss
+from langchain_core.documents import Document as LangChainDocument
+from langchain_community.docstore.in_memory import InMemoryDocstore
+from typing import List, Dict, Any
 
 # Custom embedding function (same as in ingest.py)
 class OllamaEmbeddings(Embeddings):
@@ -13,9 +17,11 @@ class OllamaEmbeddings(Embeddings):
         self.model = model
         self.client = Client()
     
-    def embed_documents(self, texts):
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
         embeddings = []
-        for text in texts:
+        for i, text in enumerate(texts):
+            if i % 10 == 0:
+                print(f"  Embedding document {i+1}/{len(texts)}...")
             response = self.client.embeddings(
                 model=self.model,
                 prompt=text
@@ -23,7 +29,7 @@ class OllamaEmbeddings(Embeddings):
             embeddings.append(response["embedding"])
         return embeddings
     
-    def embed_query(self, text):
+    def embed_query(self, text: str) -> List[float]:
         response = self.client.embeddings(
             model=self.model,
             prompt=text
