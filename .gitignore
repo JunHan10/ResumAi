@@ -62,3 +62,5 @@ data/resumes/
 credentials.json
 *.pem
 *.key
+*.plk
+*.faiss
