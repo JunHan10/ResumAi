@@ -1,0 +1,28 @@
+{
+  "overall_score": 78,
+  "suggestions": [
+    {
+      "id": "sugg-001",
+      "start_char": 0,
+      "end_char": 41,
+      "line_number": 1,
+      "original_text": "Managed a team of engineers",
+      "suggested_text": "Led and developed a cross-functional team of 6 engineers",
+      "explanation": "Replaces generic wording with stronger, leadership-focused phrasing and introduces quantification to make the accomplishment more concrete.",
+      "category": "impact",
+      "confidence": 0.93
+    },
+    {
+      "id": "sugg-002",
+      "start_char": 45,
+      "end_char": 70,
+      "line_number": 1,
+      "original_text": "deliver software projects",
+      "suggested_text": "deliver three major software releases, improving deployment reliability by 30%",
+      "explanation": "Adds measurable outcomes to clearly demonstrate the impact of the work.",
+      "category": "quantification",
+      "confidence": 0.88
+    }
+  ],
+  "high_level_rewrite": "Led and developed a cross-functional team of 6 engineers to deliver three major software releases, improving deployment reliability by 30%."
+}
