@@ -66,128 +66,130 @@ def chunk_job_description(job: Dict[str, Any], job_id: int) -> List[LangChainDoc
     """
     Intelligently chunk a job description into semantic sections.
     Each chunk preserves metadata for better retrieval.
+    Tailored for your JSON structure with fields like:
+    - position_title, company_name, location
+    - position_summary, company_description
+    - primary_responsibilities, requirements
+    - salary_min, salary_max, job_type
     """
     chunks = []
     
-    # Extract common fields
-    job_title = job.get("job_title", job.get("title", "Unknown"))
-    company = job.get("company", job.get("company_name", "Unknown"))
+    # Extract standard fields
+    job_title = job.get("position_title", "Unknown Position")
+    company = job.get("company_name", "Unknown Company")
     location = job.get("location", "")
+    job_type = job.get("job_type", "")
+    job_id_from_data = job.get("id", job_id)
     
-    # Strategy: Create chunks for each major section
-    # Adjust these field names based on your actual JSON structure
+    # Salary info for metadata
+    salary_info = None
+    if job.get("salary_min") and job.get("salary_max"):
+        pay_period = job.get("pay_period", "Annual")
+        salary_info = f"${job['salary_min']:,} - ${job['salary_max']:,} {pay_period}"
     
-    # 1. Overview chunk (title + company + summary)
-    overview_parts = [f"Job Title: {job_title}", f"Company: {company}"]
+    # 1. OVERVIEW CHUNK (Company + Position Summary)
+    overview_parts = [
+        f"Position: {job_title}",
+        f"Company: {company}"
+    ]
+    
     if location:
         overview_parts.append(f"Location: {location}")
+    if job_type:
+        overview_parts.append(f"Job Type: {job_type}")
     
-    for key in ["summary", "description", "overview", "about"]:
-        if key in job and job[key]:
-            overview_parts.append(str(job[key]))
-            break
+    # Add company description
+    if job.get("company_description"):
+        overview_parts.append(f"\nAbout the Company:\n{job['company_description']}")
     
-    if len(overview_parts) > 2:  # Has more than just title + company
+    # Add position summary
+    if job.get("position_summary"):
+        overview_parts.append(f"\nPosition Summary:\n{job['position_summary']}")
+    
+    chunks.append(LangChainDocument(
+        page_content="\n".join(overview_parts),
+        metadata={
+            "job_id": job_id_from_data,
+            "job_title": job_title,
+            "company": company,
+            "location": location,
+            "job_type": job_type,
+            "salary": salary_info,
+            "section": "overview",
+            "source": "job_description"
+        }
+    ))
+    
+    # 2. RESPONSIBILITIES CHUNK
+    if job.get("primary_responsibilities"):
+        responsibilities = job["primary_responsibilities"]
+        if isinstance(responsibilities, list):
+            content = "\n".join(f"• {item}" for item in responsibilities)
+        else:
+            content = str(responsibilities)
+        
         chunks.append(LangChainDocument(
-            page_content="\n".join(overview_parts),
+            page_content=f"Primary Responsibilities:\n{content}",
             metadata={
-                "job_id": job_id,
+                "job_id": job_id_from_data,
                 "job_title": job_title,
                 "company": company,
-                "section": "overview",
+                "location": location,
+                "job_type": job_type,
+                "salary": salary_info,
+                "section": "responsibilities",
                 "source": "job_description"
             }
         ))
     
-    # 2. Responsibilities chunk
-    for key in ["responsibilities", "duties", "what_you_will_do", "role_description"]:
-        if key in job and job[key]:
-            content = job[key]
-            if isinstance(content, list):
-                content = "\n".join(f"• {item}" for item in content)
-            chunks.append(LangChainDocument(
-                page_content=f"Responsibilities:\n{content}",
-                metadata={
-                    "job_id": job_id,
-                    "job_title": job_title,
-                    "company": company,
-                    "section": "responsibilities",
-                    "source": "job_description"
-                }
-            ))
-            break
-    
-    # 3. Required qualifications chunk
-    for key in ["requirements", "required_qualifications", "must_have", "required_skills"]:
-        if key in job and job[key]:
-            content = job[key]
-            if isinstance(content, list):
-                content = "\n".join(f"• {item}" for item in content)
-            chunks.append(LangChainDocument(
-                page_content=f"Required Qualifications:\n{content}",
-                metadata={
-                    "job_id": job_id,
-                    "job_title": job_title,
-                    "company": company,
-                    "section": "requirements",
-                    "source": "job_description"
-                }
-            ))
-            break
-    
-    # 4. Preferred qualifications chunk
-    for key in ["preferred_qualifications", "nice_to_have", "preferred_skills", "bonus"]:
-        if key in job and job[key]:
-            content = job[key]
-            if isinstance(content, list):
-                content = "\n".join(f"• {item}" for item in content)
-            chunks.append(LangChainDocument(
-                page_content=f"Preferred Qualifications:\n{content}",
-                metadata={
-                    "job_id": job_id,
-                    "job_title": job_title,
-                    "company": company,
-                    "section": "preferred",
-                    "source": "job_description"
-                }
-            ))
-            break
-    
-    # 5. Benefits/culture chunk
-    for key in ["benefits", "perks", "culture", "why_join", "what_we_offer"]:
-        if key in job and job[key]:
-            content = job[key]
-            if isinstance(content, list):
-                content = "\n".join(f"• {item}" for item in content)
-            chunks.append(LangChainDocument(
-                page_content=f"Benefits & Culture:\n{content}",
-                metadata={
-                    "job_id": job_id,
-                    "job_title": job_title,
-                    "company": company,
-                    "section": "benefits",
-                    "source": "job_description"
-                }
-            ))
-            break
-    
-    # Fallback: if no structured fields, use the whole job as one chunk
-    if not chunks:
-        # Join all string values
-        all_text = []
-        for key, value in job.items():
-            if isinstance(value, str) and value.strip():
-                all_text.append(f"{key}: {value}")
-            elif isinstance(value, list):
-                all_text.append(f"{key}: " + ", ".join(str(v) for v in value))
+    # 3. REQUIREMENTS CHUNK
+    if job.get("requirements"):
+        requirements = job["requirements"]
+        if isinstance(requirements, list):
+            content = "\n".join(f"• {item}" for item in requirements)
+        else:
+            content = str(requirements)
         
         chunks.append(LangChainDocument(
-            page_content="\n".join(all_text),
+            page_content=f"Requirements:\n{content}",
             metadata={
-                "job_id": job_id,
+                "job_id": job_id_from_data,
                 "job_title": job_title,
                 "company": company,
-                "section": "full",
+                "location": location,
+                "job_type": job_type,
+                "salary": salary_info,
+                "section": "requirements",
+                "source": "job_description"
+            }
+        ))
+    
+    # 4. COMPENSATION CHUNK (if you want salary searchable)
+    if salary_info and job.get("pay_period"):
+        comp_parts = [f"Compensation: {salary_info}"]
+        
+        # Add any benefits or relocation info if present
+        if job.get("benefits"):
+            benefits = job["benefits"]
+            if isinstance(benefits, list):
+                comp_parts.append("Benefits:\n" + "\n".join(f"• {b}" for b in benefits))
+            else:
+                comp_parts.append(f"Benefits: {benefits}")
+        
+        if job.get("relocation_required") is not None:
+            reloc = "Required" if job["relocation_required"] else "Not Required"
+            comp_parts.append(f"Relocation: {reloc}")
+        
+        chunks.append(LangChainDocument(
+            page_content="\n".join(comp_parts),
+            metadata={
+                "job_id": job_id_from_data,
+                "job_title": job_title,
+                "company": company,
+                "location": location,
+                "job_type": job_type,
+                "salary": salary_info,
+                "section": "compensation",
                 "source": "job_description"
             }
         ))
