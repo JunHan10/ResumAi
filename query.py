@@ -50,7 +50,7 @@ def search(vectorstore, query, k=5):
     return chunks
 
 # Build prompt + call Ollama
-def query_llm(job_description_context, question, file_content, model="llama3.2"):
+def query_llm(job_descriptions, json_schema, question, file_content, model="llama3.2"):
     """Query the LLM with context from the vectorstore"""
     client = Client()
 
@@ -60,7 +60,7 @@ Resume Content:
 {file_content}
 
 Context of job descriptions:
-{job_description_context}
+{job_descriptions}
 
 Question:
 {question}
@@ -148,8 +148,10 @@ if __name__ == "__main__":
             st.markdown("### 🔍 Searching relevant information...")
             job_descriptions = search(vectorstore, question, k=5, filter={"source": "job_description"})
             job_description_context = "\n\n".join(job_descriptions)
+            json_schema = search(vectorstore, question, k=3, filter={"source": "resume_schema"})
+            json_schema_context = "\n\n".join(json_schema)
             st.markdown("### 💬 Generating answer...")
-            answer = query_llm(job_description_context, question, file_content)
+            answer = query_llm(job_description_context, json_schema_context, question, file_content)
             st.markdown("### Answer:")
             st.markdown(answer)
         except Exception as e:
