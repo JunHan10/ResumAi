@@ -5,6 +5,7 @@ import streamlit as st
 import pdfplumber
 import os
 import io
+import json
 
 
 # Custom embedding function (same as in ingest.py)
@@ -78,6 +79,23 @@ Do not invent new keys. Do not produce non-JSON text."""
     )
     return response["message"]["content"]
 
+def suggestion_parser(response):
+    data = json.loads(response)
+    suggestions = []
+    for idx, sugg in enumerate(data["suggestions"], start=1):
+        suggestions.append({
+            "id": idx,  # Convert to numeric ID starting from 1
+            "start_char": sugg["start_char"],
+            "end_char": sugg["end_char"],
+            "line_number": sugg["line_number"],
+            "original_text": sugg["original_text"],
+            "suggested_text": sugg["suggested_text"],
+            "explanation": sugg["explanation"],
+            "category": sugg["category"],
+            "confidence": sugg["confidence"]
+        })
+    return suggestions
+
 # --- Start of Streamlit UI ---
 st.set_page_config(page_title="Resume Editor", page_icon=":briefcase:", layout="wide")
 
@@ -86,7 +104,7 @@ st.title("Resume Editor (Powered by llama3.2)")
 uploaded_file = st.file_uploader("Upload your resume (PDF or TXT)", type=["pdf", "txt"])
 question = st.text_input("Your Question", "How can I improve my resume for a software engineering position?")
 
-analyze = st.button("Critque Resume")
+analyze = st.button("Critique Resume")
 
 def extract_text_from_pdf(pdf_file):
     pdf_reader = pdfplumber.open(pdf_file)
@@ -129,7 +147,7 @@ if __name__ == "__main__":
             st.markdown("### 💬 Generating answer...")
             answer = query_llm(job_description_context, json_schema_context, question, file_content)
             st.markdown("### Answer:")
-            st.markdown(answer)
+            st.markdown(suggestion_parser(answer))
         except Exception as e:
             st.error(f"Error analyzing resume: {e}")
             st.stop()
