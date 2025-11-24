@@ -12,6 +12,8 @@ uv/               # if you have a venv named 'uv' include it here
 
 # Project-specific lockfiles (optional)
 # Remove from ignore if you want to commit them
+# Project-specific lockfiles (optional)
+# If you want to track your environment lockfile (recommended for reproducibility), remove this line.
 uv.lock
 
 # Build / packaging
@@ -46,21 +48,59 @@ huggingface/
 models/
 
 # Generated vector DB / embeddings
+# Generated vector DB / embeddings
 vectorstore/
 *.faiss
+*.index
 *.npy
+*.npz
+*.ckpt
 
 # Data and sensitive files
 # Keep small, safe files in `data/` but ignore private data/resumes
+# Data and sensitive files
+# Keep raw resumes and other PII out of the repo; keep job descriptions (JSON) tracked.
 data/resumes/
-# If you want to keep a single job description file, un-ignore it explicitly:
-!data/job_description.txt
+data/raw/
+# Keep the job_description folder (JSON job descriptions) in the repo; do not ignore it.
+!data/job_description/
+!data/job_description/**
 
+# Secrets and environment files
+.env
+.env.*
 # Secrets and environment files
 .env
 .env.*
 credentials.json
 *.pem
 *.key
-*.plk
-*.faiss
+# Pickle files (binary). Ignore by default; add exceptions if you have small, safe pickles to track.
+*.pkl
+
+# Temporary / OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Logs & test output
+*.log
+.pytest_cache/
+coverage.xml
+htmlcov/
+.coverage
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Virtual environments (local venvs)
+.venv/
+venv/
+env/
+ENV/
+uv/
