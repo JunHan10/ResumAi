@@ -78,35 +78,6 @@ Do not invent new keys. Do not produce non-JSON text."""
     )
     return response["message"]["content"]
 
-# Interactive query function
-def interactive_query(vectorstore, model="llama3.2"):
-    """Allow interactive querying of the vectorstore"""
-    print("\n=== Resume & Job Description Query System ===")
-    print("Type 'quit' or 'exit' to stop\n")
-    
-    while True:
-        question = input("Your question: ").strip()
-        
-        if question.lower() in ['quit', 'exit', 'q']:
-            print("Goodbye!")
-            break
-        
-        if not question:
-            continue
-        
-        print("\n🔍 Searching relevant information...")
-        top_chunks = search(vectorstore, question, k=5)
-        context = "\n\n".join(top_chunks)
-        
-        print("💬 Generating answer...\n")
-        answer = query_llm(context, question, model)
-        
-        print("Answer:")
-        print("-" * 60)
-        print(answer)
-        print("-" * 60)
-        print()
-
 # --- Start of Streamlit UI ---
 st.set_page_config(page_title="Resume Editor", page_icon=":briefcase:", layout="wide")
 
