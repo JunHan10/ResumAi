@@ -232,6 +232,7 @@ def load_example_json_documents(folder: str) -> List[LangChainDocument]:
     """
     Load schema/example JSON files as single documents.
     Each file becomes one retrievable document with metadata tags.
+    Currently unused
     """
     docs = []
     for filename in os.listdir(folder):
@@ -307,15 +308,6 @@ if __name__ == "__main__":
     if not documents:
         print("Error: No documents were created. Check your JSON structure.")
         exit(1)
-
-    # Load schema/example JSON documents
-    schema_docs = load_example_json_documents("data/json_examples")
-
-    if not schema_docs:
-        print("Error: No schema/example JSON documents found.")
-        exit(1)
-    
-    documents.extend(schema_docs)
     
     # Build vector store
     vectorstore = build_faiss_vectorstore(documents)
