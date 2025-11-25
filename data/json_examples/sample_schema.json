@@ -17,18 +17,6 @@
             "type": "string",
             "description": "Unique identifier for the suggestion."
           },
-          "start_char": {
-            "type": "integer",
-            "description": "Start character offset (0-indexed) in the input resume text."
-          },
-          "end_char": {
-            "type": "integer",
-            "description": "End character offset (0-indexed, inclusive) in the input resume text."
-          },
-          "line_number": {
-            "type": "integer",
-            "description": "Line number (1-indexed) where the text occurs."
-          },
           "original_text": {
             "type": "string",
             "description": "Exact substring from the input resume that is being improved."
@@ -52,11 +40,11 @@
         },
         "required": [
           "id",
-          "start_char",
-          "end_char",
           "original_text",
           "suggested_text",
-          "explanation"
+          "explanation",
+          "category",
+          "confidence"
         ]
       }
     }
