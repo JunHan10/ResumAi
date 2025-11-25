@@ -64,14 +64,14 @@ Question to focus your analysis on:
 {question}
 
 Provide detailed and specific suggestions for changes to this resume. Do not make up any metrics not mentioned in the resume. If you have a suggestion that involves adding a metric, leave it as a variable and explain to replace the variable with an appropriate value in your explanation
-If one the question asked mentions a specific job position, tailor your suggestion to that role using the corresponding job descrition from this list:
+If the question asked mentions a specific job position, tailor your suggestion to that role using the corresponding job descrition from this list:
 {job_descriptions}
 
 Your response needs to follow this JSON schema exactly:
 {json_schema}
 
 Use the same keys, structure, and ordering as in the example json.
-Do not invent new keys. Do not produce non-JSON text."""
+Do not invent new keys. Do not produce non-JSON text. Do not include ""type": "object"" or ""properties"" or ""required"" fields. in your response."""
     
     response = client.chat(
         model=model,
@@ -147,7 +147,7 @@ if __name__ == "__main__":
             st.markdown("### 💬 Generating answer...")
             answer = query_llm(job_description_context, json_schema_context, question, file_content)
             st.markdown("### Answer:")
-            st.markdown(suggestion_parser(answer))
+            st.markdown(answer)
         except Exception as e:
             st.error(f"Error analyzing resume: {e}")
             st.stop()

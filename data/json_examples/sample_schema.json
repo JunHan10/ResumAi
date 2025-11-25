@@ -59,10 +59,6 @@
           "explanation"
         ]
       }
-    },
-    "high_level_rewrite": {
-      "type": "string",
-      "description": "A full resume rewritten with all suggestions applied."
     }
   },
   "required": ["suggestions"]
