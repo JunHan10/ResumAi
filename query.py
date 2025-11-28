@@ -211,7 +211,7 @@ st.markdown("""
 
 st.image("ResumAI logo.png", width=500)
 
-uploaded_file = st.file_uploader("Upload your resume (PDF or TXT)", type=["pdf", "txt"])
+uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
 question = st.text_input("Your Question", "How can I improve my resume for a software engineering position?")
 
 analyze = st.button("Critique Resume")
@@ -266,11 +266,19 @@ if __name__ == "__main__":
 
             # Stage 3: Generating answer (until completion)
             status_placeholder.markdown("### 💬 Generating answer...")
-            answer = query_llm(job_description_context, json_schema_context, question, file_content)
-            print(answer)
-            suggestions = suggestion_parser(answer, file_content)
-            st.session_state.suggestions = suggestions
-            
+            error = True
+            while error:
+                try:
+                    answer = query_llm(job_description_context, json_schema_context, question, file_content)
+                    suggestions = suggestion_parser(answer, file_content)
+                    st.session_state.suggestions = suggestions
+                    error = False
+                except json.JSONDecodeError as e:
+                    print("JSON decode error, retrying...", e)
+                    error = True
+                except (ValueError, KeyError) as e:
+                    print("Parsing error, retrying...", e)
+                    error = True 
             # Clear the status message once processing is complete
             status_placeholder.empty()
             
