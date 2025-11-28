@@ -37,8 +37,8 @@ User Upload → Resume Parser → Embedding Model → Vectorstore Search
 
 #### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/resumAi.git
-cd resumAi
+git clone https://github.com/JunHan10/ResumAi.git
+cd ResumAi
 ```
 #### 2. Install UV
 ```bash
