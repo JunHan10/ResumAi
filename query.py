@@ -75,6 +75,8 @@ Your response needs to follow this JSON schema exactly:
 {json_schema}
 
 IMPORTANT:
+- Make sure the original_text field always matches text from the resume exactly.
+- Ensure the suggested_text is a concise improvement over the original_text.
 - Do NOT use, reference, or analyze the example JSON provided in context.
 - The example JSON exists ONLY to show the structure of the output.
 - Do NOT generate suggestions based on text found in the example JSON.
@@ -83,6 +85,7 @@ IMPORTANT:
 Use the same keys, structure, and ordering as in the example json. Make sure all "," delimeters and brackets are in the correct place.
 Do not invent new keys. Do not produce non-JSON text. Do not include ""type": "object"" or ""properties"" or ""required"" fields. in your response.
 Do not reuse the suggestions in the example json. Create new suggestions based on the resume content and question.
+Give a minimum of 7 suggestions, up to a maximum of 10 suggestions.
 """
     
     response = client.chat(
@@ -206,7 +209,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("Resume Editor (Powered by llama3.2)")
+st.image("ResumAI logo.png", width=500)
 
 uploaded_file = st.file_uploader("Upload your resume (PDF or TXT)", type=["pdf", "txt"])
 question = st.text_input("Your Question", "How can I improve my resume for a software engineering position?")
@@ -352,7 +355,7 @@ if __name__ == "__main__":
 
                 # Add suggestion buttons under the line
                 for s in line_suggestions:
-                    if st.button(f"View Suggestion #{s['id']}", key=f"btn_{s['id']}"):
+                    if st.button(f"View Suggestion", key=f"btn_{s['id']}"):
                         st.session_state.selected_suggestion_id = s['id']
             
             # Legend
