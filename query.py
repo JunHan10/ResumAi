@@ -8,6 +8,7 @@ import os
 import io
 import json
 import difflib
+import time
 
 
 # Custom embedding function (same as in ingest.py)
@@ -74,6 +75,8 @@ Your response needs to follow this JSON schema exactly:
 {json_schema}
 
 IMPORTANT:
+- Make sure the original_text field always matches text from the resume exactly.
+- Ensure the suggested_text is a concise improvement over the original_text.
 - Do NOT use, reference, or analyze the example JSON provided in context.
 - The example JSON exists ONLY to show the structure of the output.
 - Do NOT generate suggestions based on text found in the example JSON.
@@ -82,6 +85,7 @@ IMPORTANT:
 Use the same keys, structure, and ordering as in the example json. Make sure all "," delimeters and brackets are in the correct place.
 Do not invent new keys. Do not produce non-JSON text. Do not include ""type": "object"" or ""properties"" or ""required"" fields. in your response.
 Do not reuse the suggestions in the example json. Create new suggestions based on the resume content and question.
+Give a minimum of 7 suggestions, up to a maximum of 10 suggestions.
 """
     
     response = client.chat(
@@ -168,7 +172,44 @@ if 'file_content' not in st.session_state:
 
 st.set_page_config(page_title="Resume Editor", page_icon=":briefcase:", layout="wide")
 
-st.title("Resume Editor (Powered by llama3.2)")
+# CSS for floating suggestions panel
+st.markdown("""
+<style>
+.floating-card {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 24px;
+    z-index: 1000;
+    color: black;
+}
+.floating-card h3 {
+    margin-top: 0;
+    color: #1a1a1a;
+    font-size: 18px;
+}
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}
+.close-btn:hover {
+    color: #000;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.image("ResumAI logo.png", width=500)
 
 uploaded_file = st.file_uploader("Upload your resume (PDF or TXT)", type=["pdf", "txt"])
 question = st.text_input("Your Question", "How can I improve my resume for a software engineering position?")
@@ -202,26 +243,39 @@ if __name__ == "__main__":
         sys.exit(1)
     
     if analyze and uploaded_file:
-        st.markdown("### 📄 Analyzing Resume...")
+        # Create a placeholder for the status messages
+        status_placeholder = st.empty()
+        
         try:
+            # Stage 1: Analyzing Resume (5 seconds)
+            status_placeholder.markdown("### 📄 Analyzing Resume...")
             file_content = extract_text(uploaded_file)
             if not file_content.strip():
                 st.error("The uploaded resume is empty.")
                 st.stop()
             st.session_state.file_content = file_content
-
-            st.markdown("### 🔍 Searching relevant information...")
+            time.sleep(8)
+            
+            # Stage 2: Searching relevant information (7 seconds)
+            status_placeholder.markdown("### 🔍 Searching relevant information...")
             job_descriptions = search(vectorstore, question, k=5, filter={"source": "job_description"})
             job_description_context = "\n\n".join(job_descriptions)
             json_schema = search(vectorstore, question, k=3, filter={"source": "resume_schema"})
             json_schema_context = "\n\n".join(json_schema)
+            time.sleep(10)
 
-            st.markdown("### 💬 Generating answer...")
+            # Stage 3: Generating answer (until completion)
+            status_placeholder.markdown("### 💬 Generating answer...")
             answer = query_llm(job_description_context, json_schema_context, question, file_content)
             print(answer)
             suggestions = suggestion_parser(answer, file_content)
             st.session_state.suggestions = suggestions
+            
+            # Clear the status message once processing is complete
+            status_placeholder.empty()
+            
         except Exception as e:
+            status_placeholder.empty()
             st.error(f"Error analyzing resume: {e}")
             st.stop()
     
@@ -230,12 +284,29 @@ if __name__ == "__main__":
         suggestions = st.session_state.suggestions
         file_content = st.session_state.file_content
         
-        col1, col2 = st.columns([2, 1])
-
-        with col1:
-            # Resume Display
+        # Create columns for layout
+        main_col, panel_col = st.columns([3, 1])
+        
+        # Use the main column for resume content
+        with main_col:
+            # Resume Display  
             st.markdown("### Annotated Resume:")
             st.caption("Click on 'View Suggestion' buttons to view details")
+            
+            # Control buttons at top
+            button_cols = st.columns([1, 1, 3])
+            with button_cols[0]:
+                if st.button("Apply Selected", disabled=not st.session_state.selected_suggestion_id):
+                    if st.session_state.selected_suggestion_id:
+                        apply_suggestion(st.session_state.selected_suggestion_id)
+                        st.rerun()
+            with button_cols[1]:
+                if st.button("🔄 Clear All"):
+                    st.session_state.suggestions = None
+                    st.session_state.file_content = None
+                    st.session_state.applied_suggestions = set()
+                    st.session_state.selected_suggestion_id = None
+                    st.rerun()
             
             # Display resume with highlights
             lines = file_content.splitlines()  # safer than split('\n')
@@ -284,7 +355,7 @@ if __name__ == "__main__":
 
                 # Add suggestion buttons under the line
                 for s in line_suggestions:
-                    if st.button(f"View Suggestion #{s['id']}", key=f"btn_{s['id']}"):
+                    if st.button(f"View Suggestion", key=f"btn_{s['id']}"):
                         st.session_state.selected_suggestion_id = s['id']
             
             # Legend
@@ -300,68 +371,35 @@ if __name__ == "__main__":
             with legend_cols[3]:
                 st.markdown("✓ Applied")
         
-        with col2:
-            # Suggestion Detail Panel
-            selected_suggestion = None
-            if st.session_state.selected_suggestion_id:
-                selected_suggestion = next(
-                    (s for s in suggestions if s['id'] == st.session_state.selected_suggestion_id),
-                    None
-                )
-            
+        # Floating suggestion panel (outside columns)
+        if st.session_state.selected_suggestion_id:
+            selected_suggestion = next((s for s in suggestions if s['id'] == st.session_state.selected_suggestion_id), None)
             if selected_suggestion:
-                # Confidence badge
-                confidence_pct = int(selected_suggestion['confidence'] * 100)
-                if selected_suggestion['confidence'] >= 0.9:
-                    badge_color = 'green'
-                elif selected_suggestion['confidence'] >= 0.75:
-                    badge_color = 'orange'
-                else:
-                    badge_color = 'red'
-                
-                st.markdown(f":{badge_color}[**{confidence_pct}% CONFIDENCE**]")
-                st.markdown(f"**Category:** {selected_suggestion['category'].title()}")
-                
-                st.markdown("### Suggestion Details")
-                
-                # Original text
-                st.markdown("**Original Text**")
-                st.error(selected_suggestion['original_text'])
-                
-                # Suggested text
-                st.markdown("**Suggested Text**")
-                st.success(selected_suggestion['suggested_text'])
-                
-                # Explanation
-                st.markdown("**Explanation**")
-                st.info(selected_suggestion['explanation'])
-                
-                # Apply button
-                is_applied = selected_suggestion['id'] in st.session_state.applied_suggestions
-                if st.button(
-                    "✓ Applied" if is_applied else "Apply Suggestion",
-                    disabled=is_applied,
-                    use_container_width=True,
-                    type="primary" if not is_applied else "secondary",
-                    key=f"apply_{selected_suggestion['id']}"
-                ):
-                    apply_suggestion(selected_suggestion['id'])
-                    st.rerun()
-            else:
-                st.info("👆 Click on any 'View Suggestion' button to view details")
-            
-            # Summary Stats
-            st.markdown("---")
-            st.markdown("### Summary")
-            st.metric("Total Suggestions", len(suggestions))
-            st.metric("Applied", len(st.session_state.applied_suggestions))
-            st.metric("Remaining", len(suggestions) - len(st.session_state.applied_suggestions))
-            
-            # Clear button to reset
-            if st.button("🔄 Clear All", use_container_width=True):
-                st.session_state.suggestions = None
-                st.session_state.file_content = None
-                st.session_state.applied_suggestions = set()
-                st.session_state.selected_suggestion_id = None
-                st.session_state.llm_answer = None
-                st.rerun()
+                panel_html = f"""
+                <div class="floating-card">
+                    <h3>💡 Suggestion #{selected_suggestion['id']}</h3>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Confidence:</strong> {selected_suggestion['confidence']:.1%}<br>
+                        <strong>Line:</strong> {selected_suggestion['line_number']}
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Original:</strong><br>
+                        <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace;">
+                            {selected_suggestion['original_text']}
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Suggested:</strong><br>
+                        <div style="background: #e8f5e8; padding: 10px; border-radius: 5px; font-family: monospace;">
+                            {selected_suggestion['suggested_text']}
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Reason:</strong><br>
+                        <div style="color: #666; font-style: italic;">
+                            {selected_suggestion.get('reason', selected_suggestion.get('explanation', 'No explanation available'))}
+                        </div>
+                    </div>
+                </div>
+                """
+                st.markdown(panel_html, unsafe_allow_html=True)
