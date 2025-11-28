@@ -6,6 +6,9 @@ langchain-community
 numpy
 pdfplumber
 python-docx
+streamlit
 
 beautifulsoup4
 tqdm
+
+rapidfuzz
